@@ -1,9 +1,13 @@
-{% macro rellenarCamposRegistro(campoTemplate,numero) %}
+{#{% macro rellenarCamposRegistro(campoTemplate,numero) %}#}
+{% macro rellenarCamposRegistro(numero) %}
 
-<div class="btn-group" role="group">
-<button type="submit" class="btn btn-default" id="btn_{{ numero }}" name="numero" value={{ numero }}>{{ numero }}</button>
-{#{{ campoTemplate(class="btn btn-default", name="btn_{0}".format(numero), value=numero) | safe }}#}
-</div>
+    <div class="btn-group" role="group">
+
+        <form method="post" action="/" >
+            <button type="submit" class="btn btn-default" id="btn_{{ numero }}" name="numero" value={{ numero }}>{{ numero }}</button>
+        </form>
+    {#{{ campoTemplate(class="btn btn-default", name="btn_{0}".format(numero), value=numero) | safe }}#}
+    </div>
 
 
 {% endmacro %}

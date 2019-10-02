@@ -18,12 +18,19 @@ from moduloTemplates import formsTemplates
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "SEECRETO"
 bootstrap = Bootstrap(app)
+app.debug = True
 
-# iniciaciones variables globales . mejor usar global
-sacarResultado = False
-operacion = None
-numeroA = None
-numeroB = None
+# iniciaciones variables globales . mejor usar global. clase?
+limpiar = False
+siguienteNumero = False
+operadorTexto = [""]
+numeroA = -1
+numeroB = -1
+numeroATexto = []
+numeroBTexto = []
+
+
+# resultadoOperacion = -1
 
 
 # ruta entrada en el navegador
@@ -33,79 +40,97 @@ def home():
 
     return render_template("index.html", template=templateBotones)
 
-@app.route("/<int:numero>", methods=["POST"])
-def recibirDatos(numero=-1):
-    global resultado
+
+@app.route("/", methods=["POST"])
+def recibirDatos():
+    form = request.form
+
     global numeroA
     global numeroB
 
-    if resultado == False:
-        if numeroA is None:
-            numeroA = numero
-        if numeroB is None:
-            numeroB = numero
-            resultado = True
+    for key in form.keys():
+        if (key == "numero"):
 
+            rellenarNumero(form[key])
+            break
+
+        elif (key == "operador"):
+            mostrarfinal = rellenarOperador(form[key])
+
+            if mostrarfinal == 2:
+
+                try:
+
+                    numeroA = float("".join(numeroATexto))
+                    numeroB = float("".join(numeroBTexto))
+
+                    resultado = calcularOperacion(numeroA, numeroB, operadorTexto[0])
+
+                    dat = "".join(numeroATexto) + operadorTexto[0] + "".join(numeroBTexto) + "=" + str(resultado)
+                    print(dat)
+                    return render_template("index.html", dato=dat)
+
+                except ValueError:
+                    return "ERror"
+            elif mostrarfinal == 1:
+                break
+            elif mostrarfinal == 0:
+                return render_template("index.html", dato=" ")
+
+    dat = "".join(numeroATexto) + operadorTexto[0] + "".join(numeroBTexto)
+    return render_template("index.html", dato=dat)
+
+
+def calcularOperacion(numA, numB, operador):
+    if operador == "+":
+        return float(numA + numB)
+    elif operador == "-":
+        return float(numA - numB)
+    elif operador == "x":
+        return float(numA * numB)
+    elif operador == "/":
+        return float(numA / numB)
+
+
+def rellenarNumero(numero):
+    global siguienteNumero
+    global numeroATexto
+    global numeroBTexto
+
+    if siguienteNumero == False:
+        numeroATexto.append(numero)
     else:
-        if (operacion == "mas"):
-            pass
-        elif operacion == "menos":
-            pass
-        elif operacion == "mul":
-            pass
-        elif operacion =="div":
-            pass
-
-        total = numeroA + numeroB
-
-    if request.form["opcion"] == "1":
-        print("opcion")
-
-@app.route("/", methods=["POST"])
-def recibirOperador(operador=""):
-    templateBotones = formsTemplates.TemplateFormularioCalculadora()
-
-    if request.method == "POST":
-
-        global operacion
-        print(request.form["operador"])
-        if request.form["operador"] == "x":
-            operacion = "x"
-
-        elif request.form["operador"] == "+":
-            operacion = "+"
-
-        elif request.form["operador"] == "-":
-            operacion = "-"
-
-        elif request.form["operador"] == "/":
-            operacion = "/"
-
-        elif request.form["operador"] == "=":
-            operacion = "="
-            sacarResultado = True
-
-        return render_template("index.html", dato=operacion, template=templateBotones)
-    else:
-        return render_template("index.html", template=templateBotones)
+        numeroBTexto.append(numero)
 
 
+def rellenarOperador(oper):
+    if oper == "+" or oper == "-" or oper == "x" or oper == "/":
+
+        global siguienteNumero
+        global operadorTexto
+
+        siguienteNumero = True
+        operadorTexto[0] = oper
+        return 1
+
+    elif oper == "=":
+        siguienteNumero = False
+        # global limpiar
+        # limpiar = True
+        return 2
+
+    elif oper == " ":
+        limpiar()
+        return 0
 
 
-
-# @app.route("/<operador>", methods=["POST"])
-# def recibiroperacion(operador=""):
-#
-#
-#     global operacion
-#     operacion = operador
-#     return operacion
-
-
-
-def calcularOperacion(numeroA, numeroB):
-    pass
+def limpiar():
+    del numeroATexto[:]
+    del numeroBTexto[:]
+    operadorTexto[0] = ""
+    numeroA = -1
+    numeroB = -1
 
 
 if __name__ == "__main__":
-    app.run("127.0.0.1", 5000, debug=True)
+    app.run("127.0.0.1", 80, debug=True)
