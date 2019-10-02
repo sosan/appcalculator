@@ -20,7 +20,7 @@ app.config["SECRET_KEY"] = "SEECRETO"
 bootstrap = Bootstrap(app)
 
 # iniciaciones variables globales . mejor usar global
-resultado = False
+sacarResultado = False
 operacion = None
 numeroA = None
 numeroB = None
@@ -49,16 +49,17 @@ def recibirOperador(operador=""):
             operacion = "x"
 
         elif request.form["operador"] == "+":
-            operacion = "x"
+            operacion = "+"
 
         elif request.form["operador"] == "-":
-            operacion = "x"
+            operacion = "-"
 
         elif request.form["operador"] == "/":
-            operacion = "x"
+            operacion = "/"
 
         elif request.form["operador"] == "=":
             operacion = "="
+            sacarResultado = True
 
         return render_template("index.html", dato=operacion, template=templateBotones)
     else:
