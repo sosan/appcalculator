@@ -33,9 +33,33 @@ def home():
 
     return render_template("index.html", template=templateBotones)
 
-# @app.route("/<int:numero>", methods=["POST"])
-# def recibirDatos(numero=-1):
-#     pass
+@app.route("/<int:numero>", methods=["POST"])
+def recibirDatos(numero=-1):
+    global resultado
+    global numeroA
+    global numeroB
+
+    if resultado == False:
+        if numeroA is None:
+            numeroA = numero
+        if numeroB is None:
+            numeroB = numero
+            resultado = True
+
+    else:
+        if (operacion == "mas"):
+            pass
+        elif operacion == "menos":
+            pass
+        elif operacion == "mul":
+            pass
+        elif operacion =="div":
+            pass
+
+        total = numeroA + numeroB
+
+    if request.form["opcion"] == "1":
+        print("opcion")
 
 @app.route("/", methods=["POST"])
 def recibirOperador(operador=""):
@@ -66,32 +90,7 @@ def recibirOperador(operador=""):
         return render_template("index.html", template=templateBotones)
 
 
-    #
-    # global resultado
-    # global numeroA
-    # global numeroB
-    #
-    # if resultado == False:
-    #     if numeroA is None:
-    #         numeroA = numero
-    #     if numeroB is None:
-    #         numeroB = numero
-    #         resultado = True
-    #
-    # else:
-    #     if (operacion == "mas"):
-    #         pass
-    #     elif operacion == "menos":
-    #         pass
-    #     elif operacion == "mul":
-    #         pass
-    #     elif operacion =="div":
-    #         pass
-    #
-    #     total = numeroA + numeroB
-    #
-    # if request.form["opcion"] == "1":
-    #     print("opcion")
+
 
 
 # @app.route("/<operador>", methods=["POST"])
