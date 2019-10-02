@@ -37,26 +37,34 @@ def home():
 # def recibirDatos(numero=-1):
 #     pass
 
-@app.route("/<operador>", methods=["POST"])
+@app.route("/", methods=["POST"])
 def recibirOperador(operador=""):
+    templateBotones = formsTemplates.TemplateFormularioCalculadora()
 
-    global  operacion
-    if request.form["operador"] == "x":
-        operacion = "x"
+    if request.method == "POST":
 
-    elif request.form["operador"] == "+":
-        operacion = "x"
+        global operacion
+        print(request.form["operador"])
+        if request.form["operador"] == "x":
+            operacion = "x"
 
-    elif request.form["operador"] == "-":
-        operacion = "x"
+        elif request.form["operador"] == "+":
+            operacion = "x"
 
-    elif request.form["operador"] == "/":
-        operacion = "x"
+        elif request.form["operador"] == "-":
+            operacion = "x"
 
-    elif request.form["operador"] == "=":
-        operacion = "="
+        elif request.form["operador"] == "/":
+            operacion = "x"
 
-    return render_template("index.html", dato=request.form["operador"])
+        elif request.form["operador"] == "=":
+            operacion = "="
+
+        return render_template("index.html", dato=operacion, template=templateBotones)
+    else:
+        return render_template("index.html", template=templateBotones)
+
+
     #
     # global resultado
     # global numeroA

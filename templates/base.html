@@ -23,7 +23,9 @@
                 <div class="panel-body">
                     <div class="input-group">
                         <span class="input-group-addon" id="opr"></span>
-                        <input type="text" class="form-control" id="tResult" aria-describedby="basic-addon3">{% block dato %}{% endblock %}
+                        {% block dato %}
+
+                        {% endblock %}
                     </div>
                     <br>
 
@@ -35,7 +37,7 @@
 
 
                         <div class="btn-group" role="group">
-                            <button type="submit" class="btn btn-success" name="btn_div">/</button>
+                            <button type="submit" class="btn btn-success"  name="operador" value="/">/</button>
                         </div>
                     </div>
                     <div class="btn-group btn-group-justified" role="group">
