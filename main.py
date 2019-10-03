@@ -30,9 +30,6 @@ numeroATexto = []
 numeroBTexto = []
 
 
-# resultadoOperacion = -1
-
-
 # ruta entrada en el navegador
 @app.route("/")
 def home():
@@ -55,6 +52,10 @@ def recibirDatos():
             break
 
         elif (key == "operador"):
+
+            if (len(numeroATexto) == 0):
+                return render_template("index.html", dato="")
+
             mostrarfinal = rellenarOperador(form[key])
 
             if mostrarfinal == 2:
@@ -64,14 +65,16 @@ def recibirDatos():
                     numeroA = float("".join(numeroATexto))
                     numeroB = float("".join(numeroBTexto))
 
-                    resultado = calcularOperacion(numeroA, numeroB, operadorTexto[0])
+                    resultado = calcularOperacion(
+                        numeroA, numeroB, operadorTexto[0])
 
-                    dat = "".join(numeroATexto) + operadorTexto[0] + "".join(numeroBTexto) + "=" + str(resultado)
+                    dat = "".join(
+                        numeroATexto) + operadorTexto[0] + "".join(numeroBTexto) + "=" + str(resultado)
                     print(dat)
                     return render_template("index.html", dato=dat)
 
                 except ValueError:
-                    return "ERror"
+                    return "Error - REcargar pagina"
             elif mostrarfinal == 1:
                 break
             elif mostrarfinal == 0:
@@ -82,14 +85,18 @@ def recibirDatos():
 
 
 def calcularOperacion(numA, numB, operador):
-    if operador == "+":
-        return float(numA + numB)
-    elif operador == "-":
-        return float(numA - numB)
-    elif operador == "x":
-        return float(numA * numB)
-    elif operador == "/":
-        return float(numA / numB)
+
+        if operador == "+":
+            return float(numA + numB)
+        elif operador == "-":
+            return float(numA - numB)
+        elif operador == "x":
+            return float(numA * numB)
+        elif operador == "/":
+            if (numeroB == 0):
+                return "#Error#"
+            else:
+                return float(numA / numB)
 
 
 def rellenarNumero(numero):
@@ -104,10 +111,10 @@ def rellenarNumero(numero):
 
 
 def rellenarOperador(oper):
-    if oper == "+" or oper == "-" or oper == "x" or oper == "/":
+    global siguienteNumero
+    global operadorTexto
 
-        global siguienteNumero
-        global operadorTexto
+    if oper == "+" or oper == "-" or oper == "x" or oper == "/":
 
         siguienteNumero = True
         operadorTexto[0] = oper
